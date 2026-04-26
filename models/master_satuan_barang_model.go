@@ -14,3 +14,7 @@ type MasterSatuanBarang struct {
 	CreatedAt time.Time `gorm:"autoCreateTime" json:"created_at"`
 	UpdatedAt time.Time `gorm:"autoUpdateTime" json:"updated_at"`
 }
+
+func (MasterSatuanBarang) TableName() string {
+	return "master_satuan_barang"
+}

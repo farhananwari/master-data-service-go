@@ -11,11 +11,11 @@ Interface per-domain
 */
 type MasterBarangRepository interface {
 	FindAll() ([]models.MasterBarang, error)
-	FindByID(id string) (models.MasterBarang, error)
+	FindByKodeBarang(KodeBarang string) (models.MasterBarang, error)
 	Create(data models.MasterBarang) (models.MasterBarang, error)
 	Update(data models.MasterBarang) (models.MasterBarang, error)
-	Delete(id string) error
-	SoftDelete(id string) error
+	Delete(KodeBarang string) error
+	SoftDeleteByKodeBarang(KodeBarang string) error
 }
 
 /*
@@ -44,9 +44,9 @@ func (r *ImplMasterBarangRepo) FindAll() ([]models.MasterBarang, error) {
 	return datas, err
 }
 
-func (r *ImplMasterBarangRepo) FindByID(id string) (models.MasterBarang, error) {
+func (r *ImplMasterBarangRepo) FindByKodeBarang(KodeBarang string) (models.MasterBarang, error) {
 	var data models.MasterBarang
-	err := r.base.FindByID(&data, id)
+	err := r.base.FindByKodeBarang(&data, KodeBarang)
 	return data, err
 }
 
@@ -60,12 +60,12 @@ func (r *ImplMasterBarangRepo) Update(data models.MasterBarang) (models.MasterBa
 	return data, err
 }
 
-func (r *ImplMasterBarangRepo) Delete(id string) error {
-	return r.base.Delete(&models.MasterBarang{}, id)
+func (r *ImplMasterBarangRepo) Delete(KodeBarang string) error {
+	return r.base.Delete(&models.MasterBarang{}, KodeBarang)
 }
 
-func (r *ImplMasterBarangRepo) SoftDelete(id string) error {
-	return r.base.SoftDelete(&models.MasterBarang{}, id)
+func (r *ImplMasterBarangRepo) SoftDeleteByKodeBarang(KodeBarang string) error {
+	return r.base.SoftDeleteByKodeBarang(&models.MasterBarang{}, KodeBarang)
 }
 
 /*

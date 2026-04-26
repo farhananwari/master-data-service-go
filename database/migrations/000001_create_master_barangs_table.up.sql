@@ -4,7 +4,7 @@ CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 -- =========================
 -- TABLE
 -- =========================
-CREATE TABLE master_barangs (
+CREATE TABLE master_barang (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
 
     kode_barang VARCHAR(100) UNIQUE NOT NULL,
@@ -19,21 +19,3 @@ CREATE TABLE master_barangs (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
--- =========================
--- GENERIC UPDATE TRIGGER FUNCTION
--- =========================
-CREATE OR REPLACE FUNCTION set_updated_at()
-RETURNS TRIGGER AS $$
-BEGIN
-    NEW.updated_at = CURRENT_TIMESTAMP;
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
--- =========================
--- TRIGGER
--- =========================
-CREATE TRIGGER trg_master_barangs_updated_at
-BEFORE UPDATE ON master_barangs
-FOR EACH ROW
-EXECUTE FUNCTION set_updated_at();

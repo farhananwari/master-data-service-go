@@ -15,7 +15,7 @@ type MasterPaketBarang struct {
 	UpdatedAt  time.Time `gorm:"autoUpdateTime" json:"updated_at"`
 }
 
-type MasterPaketBarangDetail struct {
+type MasterPaketBarangItems struct {
 	ID                  string    `gorm:"type:uuid;default:gen_random_uuid();primaryKey" json:"id"`
 	MasterPaketBarangID string    `gorm:"type:varchar(100);not null;" json:"master_paket_barang_id"`
 	BarangID            string    `gorm:"type:varchar(100);not null;" json:"barang_id"`
@@ -23,4 +23,12 @@ type MasterPaketBarangDetail struct {
 	CreatedBy           string    `gorm:"type:varchar(100);not null;" json:"created_by"`
 	CreatedAt           time.Time `gorm:"autoCreateTime" json:"created_at"`
 	UpdatedAt           time.Time `gorm:"autoUpdateTime" json:"updated_at"`
+}
+
+func (MasterPaketBarang) TableName() string {
+	return "master_paket_barang"
+}
+
+func (MasterPaketBarangItems) TableName() string {
+	return "master_paket_barang_items"
 }

@@ -58,11 +58,11 @@ func SetupRoutes(router *gin.Engine, db *gorm.DB) {
 	routeMasterBarang := router.Group("/api/master-barang")
 	{
 		routeMasterBarang.GET("/", masterBarangController.GetAll)
-		routeMasterBarang.GET("/:id", masterBarangController.GetByID)
+		routeMasterBarang.GET("/:kodeBarang", masterBarangController.GetBykodeBarang)
 		routeMasterBarang.POST("/", masterBarangController.Create)
-		routeMasterBarang.PUT("/:id", masterBarangController.Update)
+		routeMasterBarang.PUT("/:kodeBarang", masterBarangController.Update)
 		//routeMasterBarang.DELETE("/:id", masterBarangController.Delete)
-		routeMasterBarang.DELETE("/:id", masterBarangController.SoftDelete)
+		routeMasterBarang.DELETE("/:kodeBarang", masterBarangController.SoftDelete)
 	}
 
 	routeMasterJenisBarang := router.Group("/api/master-jenis-barang")

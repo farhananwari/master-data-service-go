@@ -33,10 +33,10 @@ func (c *ImplMasterBarangController) GetAll(ctx *gin.Context) {
 	})
 }
 
-func (c *ImplMasterBarangController) GetByID(ctx *gin.Context) {
-	id := ctx.Param("id")
+func (c *ImplMasterBarangController) GetBykodeBarang(ctx *gin.Context) {
+	kodeBarang := ctx.Param("kodeBarang")
 
-	data, err := c.service.GetByID(id)
+	data, err := c.service.GetByID(kodeBarang)
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, gin.H{
 			"message": err.Error(),
@@ -73,7 +73,7 @@ func (c *ImplMasterBarangController) Create(ctx *gin.Context) {
 }
 
 func (c *ImplMasterBarangController) Update(ctx *gin.Context) {
-	id := ctx.Param("id")
+	kodeBarang := ctx.Param("kodeBarang")
 
 	var payload dto.UpdateMasterBarangRequest
 	if err := ctx.ShouldBindJSON(&payload); err != nil {
@@ -83,7 +83,7 @@ func (c *ImplMasterBarangController) Update(ctx *gin.Context) {
 		return
 	}
 
-	data, err := c.service.Update(id, payload)
+	data, err := c.service.Update(kodeBarang, payload)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"message": err.Error(),
@@ -97,9 +97,9 @@ func (c *ImplMasterBarangController) Update(ctx *gin.Context) {
 }
 
 func (c *ImplMasterBarangController) Delete(ctx *gin.Context) {
-	id := ctx.Param("id")
+	kodeBarang := ctx.Param("kodeBarang")
 
-	if err := c.service.Delete(id); err != nil {
+	if err := c.service.Delete(kodeBarang); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"message": err.Error(),
 		})
@@ -112,9 +112,9 @@ func (c *ImplMasterBarangController) Delete(ctx *gin.Context) {
 }
 
 func (c *ImplMasterBarangController) SoftDelete(ctx *gin.Context) {
-	id := ctx.Param("id")
+	kodeBarang := ctx.Param("kodeBarang")
 
-	if err := c.service.SoftDelete(id); err != nil {
+	if err := c.service.SoftDelete(kodeBarang); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"message": err.Error(),
 		})

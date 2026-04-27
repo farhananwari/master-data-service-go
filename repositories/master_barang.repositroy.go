@@ -11,18 +11,18 @@ Interface per-domain
 */
 type MasterBarangRepository interface {
 	FindAll() ([]models.MasterBarang, error)
-	FindByKodeBarang(KodeBarang string) (models.MasterBarang, error)
+	FindByKodeBarang(kodeBarang string) (models.MasterBarang, error)
 	Create(data models.MasterBarang) (models.MasterBarang, error)
 	Update(data models.MasterBarang) (models.MasterBarang, error)
-	Delete(KodeBarang string) error
-	SoftDeleteByKodeBarang(KodeBarang string) error
+	Delete(kodeBarang string) error
+	SoftDeleteByKodeBarang(kodeBarang string) error
 }
 
 /*
 Implementasi
 */
 type ImplMasterBarangRepo struct {
-	base *BaseRepository
+	db *gorm.DB
 }
 
 /*
@@ -30,44 +30,42 @@ Constructor
 */
 func NewMasterBarangRepository(db *gorm.DB) MasterBarangRepository {
 	return &ImplMasterBarangRepo{
-		base: NewBaseRepository(db),
+		db: db,
 	}
 }
 
 /*
-	CRUD IMPLEMENTATION
+CRUD IMPLEMENTATION
 */
 
 func (r *ImplMasterBarangRepo) FindAll() ([]models.MasterBarang, error) {
 	var datas []models.MasterBarang
-	err := r.base.FindAll(&datas)
+	err := r.db.Find(&datas).Error
 	return datas, err
 }
 
-func (r *ImplMasterBarangRepo) FindByKodeBarang(KodeBarang string) (models.MasterBarang, error) {
+func (r *ImplMasterBarangRepo) FindByKodeBarang(kodeBarang string) (models.MasterBarang, error) {
 	var data models.MasterBarang
-	err := r.base.FindByKodeBarang(&data, KodeBarang)
+	err := r.db.Where("kode_barang = ?", kodeBarang).First(&data).Error
 	return data, err
 }
 
 func (r *ImplMasterBarangRepo) Create(data models.MasterBarang) (models.MasterBarang, error) {
-	err := r.base.Create(&data)
+	err := r.db.Create(&data).Error
 	return data, err
 }
 
 func (r *ImplMasterBarangRepo) Update(data models.MasterBarang) (models.MasterBarang, error) {
-	err := r.base.Update(&data)
+	err := r.db.Save(&data).Error
 	return data, err
 }
 
-func (r *ImplMasterBarangRepo) Delete(KodeBarang string) error {
-	return r.base.Delete(&models.MasterBarang{}, KodeBarang)
+func (r *ImplMasterBarangRepo) Delete(kodeBarang string) error {
+	return r.db.Where("kode_barang = ?", kodeBarang).
+		Delete(&models.MasterBarang{}).Error
 }
 
-func (r *ImplMasterBarangRepo) SoftDeleteByKodeBarang(KodeBarang string) error {
-	return r.base.SoftDeleteByKodeBarang(&models.MasterBarang{}, KodeBarang)
+func (r *ImplMasterBarangRepo) SoftDeleteByKodeBarang(kodeBarang string) error {
+	return r.db.Where("kode_barang = ?", kodeBarang).
+		Delete(&models.MasterBarang{}).Error
 }
-
-/*
-	CUSTOM QUERY (domain-specific)
-*/

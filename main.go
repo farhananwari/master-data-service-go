@@ -12,19 +12,26 @@ import (
 )
 
 func main() {
-	db := database.GetDB()
-	// Load environment variables from .env file
+	// Load environment variables first
 	if err := godotenv.Load(); err != nil {
 		log.Println("Warning: .env file not found, using default environment variables")
 	}
 
-	// Connect to database
+	// Connect to database FIRST
 	if err := database.Connect(); err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}
 	defer database.Close()
 
-	log.Println("Starting auth-service-go...")
+	// Get DB instance AFTER connection is established
+	db := database.GetDB()
+
+	// Validate DB is not nil
+	if db == nil {
+		log.Fatal("Database connection is nil after Connect()")
+	}
+
+	log.Println("Starting master-data-service-go...")
 
 	// Initialize Gin router
 	router := gin.Default()

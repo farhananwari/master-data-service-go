@@ -9,6 +9,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	//gs "github.com/kachit/gorm-seeder"
 )
 
 func main() {

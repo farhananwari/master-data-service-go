@@ -5,6 +5,7 @@ import (
 
 	"master-data-service-go/dto"
 	"master-data-service-go/services"
+	"master-data-service-go/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -22,15 +23,11 @@ func NewMasterBarangController(service services.MasterBarangService) *ImplMaster
 func (c *ImplMasterBarangController) GetAll(ctx *gin.Context) {
 	data, err := c.service.GetAll()
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{
-			"message": err.Error(),
-		})
+		utils.Error(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{
-		"data": data,
-	})
+	utils.Success(ctx, http.StatusOK, "success get data", data)
 }
 
 func (c *ImplMasterBarangController) GetBykodeBarang(ctx *gin.Context) {
@@ -38,38 +35,29 @@ func (c *ImplMasterBarangController) GetBykodeBarang(ctx *gin.Context) {
 
 	data, err := c.service.GetByID(kodeBarang)
 	if err != nil {
-		ctx.JSON(http.StatusNotFound, gin.H{
-			"message": err.Error(),
-		})
+		utils.Error(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{
-		"data": data,
-	})
+	utils.Success(ctx, http.StatusOK, "success get data", data)
 }
 
 func (c *ImplMasterBarangController) Create(ctx *gin.Context) {
 	var payload dto.CreateMasterBarangRequest
 
 	if err := ctx.ShouldBindJSON(&payload); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{
-			"message": err.Error(),
-		})
+		errors := utils.FormatValidationError(err)
+		utils.ValidationError(ctx, errors)
 		return
 	}
 
 	data, err := c.service.Create(payload)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{
-			"message": err.Error(),
-		})
+		utils.Error(ctx, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	ctx.JSON(http.StatusCreated, gin.H{
-		"data": data,
-	})
+	utils.Success(ctx, http.StatusCreated, "berhasil create data", data)
 }
 
 func (c *ImplMasterBarangController) Update(ctx *gin.Context) {
@@ -77,32 +65,24 @@ func (c *ImplMasterBarangController) Update(ctx *gin.Context) {
 
 	var payload dto.UpdateMasterBarangRequest
 	if err := ctx.ShouldBindJSON(&payload); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{
-			"message": err.Error(),
-		})
+		utils.Error(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
 
 	data, err := c.service.Update(kodeBarang, payload)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{
-			"message": err.Error(),
-		})
+		utils.Error(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{
-		"data": data,
-	})
+	utils.Success(ctx, http.StatusOK, "success update data", data)
 }
 
 func (c *ImplMasterBarangController) Delete(ctx *gin.Context) {
 	kodeBarang := ctx.Param("kodeBarang")
 
 	if err := c.service.Delete(kodeBarang); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{
-			"message": err.Error(),
-		})
+		utils.Error(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
 
@@ -115,9 +95,7 @@ func (c *ImplMasterBarangController) SoftDelete(ctx *gin.Context) {
 	kodeBarang := ctx.Param("kodeBarang")
 
 	if err := c.service.SoftDelete(kodeBarang); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{
-			"message": err.Error(),
-		})
+		utils.Error(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
 

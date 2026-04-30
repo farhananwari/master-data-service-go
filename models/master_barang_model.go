@@ -2,10 +2,12 @@ package models
 
 import (
 	"time"
+
+	"github.com/google/uuid"
 )
 
 type MasterBarang struct {
-	ID             string    `gorm:"type:uuid;default:gen_random_uuid();primaryKey" json:"id"`
+	ID             uuid.UUID `gorm:"type:uuid;primary_key;default:gen_random_uuid()" json:"id"`
 	KodeBarang     string    `gorm:"type:varchar(100);unique;not null;" json:"kode_barang"`
 	Nama           string    `gorm:"type:varchar(100);not null;" json:"nama"`
 	SatuanBarangID string    `gorm:"type:varchar(100);not null;" json:"satuan_barang_id"`

@@ -1,0 +1,14 @@
+-- Insert data satuan umum
+INSERT INTO master_jenis_satuan (nama, is_active, created_by) VALUES
+('Pcs', true, 'admin'),
+('Dus', true, 'admin'),
+('Pack', true, 'admin'),
+('Botol', true, 'admin'),
+('Kaleng', true, 'admin'),
+('Lembar', true, 'admin'),
+('Buah', true, 'admin'),
+('Pasang', true, 'admin'),
+('Set', true, 'admin'),
+('Roll', true, 'admin'),
+('Unit', true, 'admin'),
+('Box', true, 'admin')

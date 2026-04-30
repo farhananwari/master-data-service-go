@@ -1,0 +1,6 @@
+-- Cara 1: Insert langsung
+INSERT INTO master_jenis_barang (nama, is_active, created_by) VALUES
+('Alat Rumah Tangga', true, 'admin'),
+('Makanan/Minuman', true, 'admin'),
+('Alat dapur', true, 'admin' ),
+('Lain-lain', true, 'admin')

@@ -11,11 +11,12 @@ Interface per-domain
 */
 type MasterBarangRepository interface {
 	FindAll() ([]models.MasterBarang, error)
+	FindByID(id string) (models.MasterBarang, error)
 	FindByKodeBarang(kodeBarang string) (models.MasterBarang, error)
 	Create(data models.MasterBarang) (models.MasterBarang, error)
-	Update(data models.MasterBarang) (models.MasterBarang, error)
+	Update(id string, data models.MasterBarang) (models.MasterBarang, error)
 	Delete(kodeBarang string) error
-	SoftDeleteByKodeBarang(kodeBarang string) error
+	SoftDelete(kodeBarang string) error
 }
 
 /*
@@ -44,6 +45,12 @@ func (r *ImplMasterBarangRepo) FindAll() ([]models.MasterBarang, error) {
 	return datas, err
 }
 
+func (r *ImplMasterBarangRepo) FindByID(id string) (models.MasterBarang, error) {
+	var data models.MasterBarang
+	err := r.db.Where("id = ?", id).First(&data).Error
+	return data, err
+}
+
 func (r *ImplMasterBarangRepo) FindByKodeBarang(kodeBarang string) (models.MasterBarang, error) {
 	var data models.MasterBarang
 	err := r.db.Where("kode_barang = ?", kodeBarang).First(&data).Error
@@ -55,17 +62,18 @@ func (r *ImplMasterBarangRepo) Create(data models.MasterBarang) (models.MasterBa
 	return data, err
 }
 
-func (r *ImplMasterBarangRepo) Update(data models.MasterBarang) (models.MasterBarang, error) {
+func (r *ImplMasterBarangRepo) Update(id string, data models.MasterBarang) (models.MasterBarang, error) {
 	err := r.db.Save(&data).Error
 	return data, err
 }
 
-func (r *ImplMasterBarangRepo) Delete(kodeBarang string) error {
-	return r.db.Where("kode_barang = ?", kodeBarang).
+func (r *ImplMasterBarangRepo) Delete(id string) error {
+	return r.db.Where("id = ?", id).
 		Delete(&models.MasterBarang{}).Error
 }
 
-func (r *ImplMasterBarangRepo) SoftDeleteByKodeBarang(kodeBarang string) error {
-	return r.db.Where("kode_barang = ?", kodeBarang).
-		Delete(&models.MasterBarang{}).Error
+func (r *ImplMasterBarangRepo) SoftDelete(id string) error {
+	return r.db.Model(&models.MasterBarang{}).
+		Where("id = ?", id).
+		Update("is_active", false).Error
 }

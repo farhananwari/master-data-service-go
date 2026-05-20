@@ -61,7 +61,7 @@ func (c *ImplMasterBarangController) Create(ctx *gin.Context) {
 }
 
 func (c *ImplMasterBarangController) Update(ctx *gin.Context) {
-	kodeBarang := ctx.Param("kodeBarang")
+	id := ctx.Param("id")
 
 	var payload dto.UpdateMasterBarangRequest
 	if err := ctx.ShouldBindJSON(&payload); err != nil {
@@ -69,7 +69,7 @@ func (c *ImplMasterBarangController) Update(ctx *gin.Context) {
 		return
 	}
 
-	data, err := c.service.Update(kodeBarang, payload)
+	data, err := c.service.Update(id, payload)
 	if err != nil {
 		utils.Error(ctx, http.StatusInternalServerError, err.Error())
 		return
@@ -79,9 +79,9 @@ func (c *ImplMasterBarangController) Update(ctx *gin.Context) {
 }
 
 func (c *ImplMasterBarangController) Delete(ctx *gin.Context) {
-	kodeBarang := ctx.Param("kodeBarang")
+	id := ctx.Param("id")
 
-	if err := c.service.Delete(kodeBarang); err != nil {
+	if err := c.service.Delete(id); err != nil {
 		utils.Error(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}

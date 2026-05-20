@@ -2,20 +2,20 @@ package services
 
 import (
 	"errors"
-	"strings"
-
 	"master-data-service-go/dto"
 	"master-data-service-go/models"
 	"master-data-service-go/repositories"
+	"strings"
 )
 
 type MasterBarangService interface {
 	GetAll() ([]models.MasterBarang, error)
-	GetByID(KodeBarang string) (models.MasterBarang, error)
+	GetByID(id string) (models.MasterBarang, error)
+	GetByKodeBarang(kodeBarang string) (models.MasterBarang, error)
 	Create(req dto.CreateMasterBarangRequest) (models.MasterBarang, error)
-	Update(KodeBarang string, req dto.UpdateMasterBarangRequest) (models.MasterBarang, error)
-	Delete(KodeBarang string) error
-	SoftDelete(KodeBarang string) error
+	Update(id string, req dto.UpdateMasterBarangRequest) (models.MasterBarang, error)
+	Delete(id string) error
+	SoftDelete(id string) error
 }
 
 type ImplMasterBarangService struct {
@@ -32,17 +32,14 @@ func (s *ImplMasterBarangService) GetAll() ([]models.MasterBarang, error) {
 	return s.repo.FindAll()
 }
 
-func (s *ImplMasterBarangService) GetByID(KodeBarang string) (models.MasterBarang, error) {
-	if KodeBarang == "" {
-		return models.MasterBarang{}, errors.New("kode barang tidak boleh kosong")
-	}
-	return s.repo.FindByKodeBarang(KodeBarang)
+func (s *ImplMasterBarangService) GetByID(id string) (models.MasterBarang, error) {
+	return s.repo.FindByID(id)
 }
 
-func (s *ImplMasterBarangService) Create(
-	req dto.CreateMasterBarangRequest,
-) (models.MasterBarang, error) {
-
+func (s *ImplMasterBarangService) GetByKodeBarang(kodeBarang string) (models.MasterBarang, error) {
+	return s.repo.FindByKodeBarang(kodeBarang)
+}
+func (s *ImplMasterBarangService) Create(req dto.CreateMasterBarangRequest) (models.MasterBarang, error) {
 	// mapping DTO -> Model
 	data := models.MasterBarang{
 		KodeBarang:     strings.TrimSpace(req.KodeBarang),
@@ -66,17 +63,8 @@ func (s *ImplMasterBarangService) Create(
 	// create
 	return s.repo.Create(data)
 }
-
-func (s *ImplMasterBarangService) Update(
-	KodeBarang string,
-	req dto.UpdateMasterBarangRequest,
-) (models.MasterBarang, error) {
-
-	if KodeBarang == "" {
-		return models.MasterBarang{}, errors.New("Kode barang tidak boleh kosong")
-	}
-
-	existing, err := s.repo.FindByKodeBarang(KodeBarang)
+func (s *ImplMasterBarangService) Update(id string, req dto.UpdateMasterBarangRequest) (models.MasterBarang, error) {
+	existing, err := s.repo.FindByID(id)
 	if err != nil {
 		return models.MasterBarang{}, err
 	}
@@ -91,19 +79,12 @@ func (s *ImplMasterBarangService) Update(
 		existing.IsActive = *req.IsActive
 	}
 
-	return s.repo.Update(existing)
+	return s.repo.Update(id, existing)
 }
+func (s *ImplMasterBarangService) Delete(id string) error {
 
-func (s *ImplMasterBarangService) Delete(KodeBarang string) error {
-	if KodeBarang == "" {
-		return errors.New("Kode barang tidak boleh kosong")
-	}
-	return s.repo.Delete(KodeBarang)
+	return s.repo.Delete(id)
 }
-
-func (s *ImplMasterBarangService) SoftDelete(KodeBarang string) error {
-	if KodeBarang == "" {
-		return errors.New("Kode barang tidak boleh kosong")
-	}
-	return s.repo.SoftDeleteByKodeBarang(KodeBarang)
+func (s *ImplMasterBarangService) SoftDelete(id string) error {
+	return s.repo.SoftDelete(id)
 }
